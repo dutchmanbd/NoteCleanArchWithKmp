@@ -32,25 +32,27 @@ class NoteListViewModel @Inject constructor(
         NoteListState(
             notes = searchNotes.execute(notes, searchText),
             searchText = searchText,
-            isSearchActive = true
+            isSearchActive = isSearchActive
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NoteListState())
 
-    init {
-        viewModelScope.launch {
-            (1..5).onEach {
-                noteDataSource.insertNote(
-                    Note(
-                        id = null,
-                        title = "Note $it",
-                        content = "Content $it",
-                        colorHex = Note.generateRandomColor(),
-                        created = DateTimeUtil.now()
-                    )
-                )
-            }
-        }
-    }
+//    init {
+//        viewModelScope.launch {
+//            if(notes.value.isEmpty()){
+//                (1..5).onEach {
+//                    noteDataSource.insertNote(
+//                        Note(
+//                            id = null,
+//                            title = "Note $it",
+//                            content = "Content $it",
+//                            colorHex = Note.generateRandomColor(),
+//                            created = DateTimeUtil.now()
+//                        )
+//                    )
+//                }
+//            }
+//        }
+//    }
     
     fun loadNotes(){
         viewModelScope.launch {

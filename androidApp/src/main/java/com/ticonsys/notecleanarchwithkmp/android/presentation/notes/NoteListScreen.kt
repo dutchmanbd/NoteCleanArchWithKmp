@@ -24,11 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ticonsys.notecleanarchwithkmp.domain.note.Note
+import androidx.navigation.NavController
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NoteListScreen(
+    navController: NavController,
     viewModel: NoteListViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -40,7 +41,7 @@ fun NoteListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-
+                    navController.navigate("note_detail/-1L")
                 },
                 backgroundColor = Color.Black
             ) {
@@ -60,9 +61,7 @@ fun NoteListScreen(
         ) {
 
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(padding),
+                modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 HideableSearchTextField(
@@ -75,14 +74,13 @@ fun NoteListScreen(
                         .fillMaxWidth()
                         .height(90.dp)
                 )
-
                 this@Column.AnimatedVisibility(
                     visible = !state.isSearchActive,
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
                     Text(
-                        text = "All Notes",
+                        text = "All notes",
                         fontWeight = FontWeight.Bold,
                         fontSize = 30.sp
                     )
@@ -91,17 +89,19 @@ fun NoteListScreen(
 
             LazyColumn(
                 modifier = Modifier.weight(1f)
-            ){
+            ) {
                 items(
                     items = state.notes,
                     key = {
                         it.id!!
                     }
-                ){note ->
+                ) { note ->
                     NoteItem(
                         note = note,
                         backgroundColor = Color(note.colorHex),
-                        onNoteClick = {  },
+                        onNoteClick = {
+                            navController.navigate("note_detail/${note.id}")
+                        },
                         onDeleteClick = {
                             viewModel.deleteNoteById(note.id!!)
                         },
